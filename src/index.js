@@ -90,6 +90,17 @@ app.get("/api/user/:username", async (req, res) => {
     }
     const user = userData.data[0];
 
+    // fetch user headshot
+    try {
+      const headRes = await doFetch(
+        `https://thumbnails.roblox.com/v1/users/avatar?userIds=${user.id}&size=100x100&format=png&isCircular=true`
+      );
+      const headJson = await headRes.json();
+      user.headshotUrl = headJson.data?.[0]?.imageUrl || null;
+    } catch {
+      user.headshotUrl = null;
+    }
+
     // fetch outfits
     const outfitsResp = await doFetch(
       `https://avatar.roblox.com/v1/users/${user.id}/outfits?page=1&itemsPerPage=500`

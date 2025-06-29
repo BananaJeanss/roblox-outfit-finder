@@ -1,13 +1,18 @@
 async function findOutfits() {
   const username = document.getElementById("username").value.trim();
   const container = document.getElementById("outfits-container");
+  const userContainer = document.getElementById("username-container");
+  const userTitle = document.getElementById("username-title");
+  const userImg = document.getElementById("user-thumbnail");
 
   if (!username) {
     container.innerHTML = "<p>Please enter a username</p>";
+    userContainer.style.display = "none";
     return;
   }
 
   container.innerHTML = "<p>Loading outfits...</p>";
+  userContainer.style.display = "none";
 
   try {
     const response = await fetch(`/api/user/${username}`);
@@ -18,12 +23,19 @@ async function findOutfits() {
       if (response.status === 429) {
         container.innerHTML =
           "<p>Ratelimited, try again after 15 seconds (429)</p>";
-        return;
+      } else {
+        // if any other error
+        container.innerHTML = `<p>${data.error}</p>`;
       }
-      // if any other error
-      container.innerHTML = `<p>${data.error}</p>`;
       return;
     }
+
+    // update and show user info
+    userTitle.textContent = `@${data.user.name} (${data.user.displayName})`;
+
+    // use headshotUrl from API (falls back to default if null)
+    userImg.src = data.user.headshotUrl || "android-chrome-512x512.png";
+    userContainer.style.display = "flex";
 
     // no outfits found
     if (!data.outfits || data.outfits.length === 0) {
