@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Roblox Outfit Finder</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="manifest" href="site.webmanifest" />
+  </head>
+
+  <body>
+    <div class="hero">
+      <h1>Roblox Outfit Finder</h1>
+      <p>Finds a users saved outfits by their username.</p>
+    </div>
+    <div class="search-bar">
+      <input
+        type="text"
+        id="username"
+        placeholder="username (not display name)"
+      />
+      <button onclick="findOutfits()" id="search-button">Find outfits</button>
+    </div>
+    <div id="outfits-container"></div>
+    <script src="/js/FindOutfits.js"></script>
+  </body>
+</html>

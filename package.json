@@ -1,0 +1,24 @@
+{
+  "name": "roblox-outfit-finder",
+  "version": "1.0.0",
+  "description": "Finds a user's outfits, on a website.",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "author": "@BananaJeanss",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^17.0.0",
+    "express": "^4.18.2",
+    "helmet": "^8.1.0",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

@@ -1,0 +1,146 @@
+@import url("https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&display=swap");
+
+:root {
+  --primary-color: #000000;
+  --secondary-color: #0a0a0a;
+  --tertiary-color: #1a1a1a;
+}
+
+* {
+  font-family: "Funnel Display", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: white;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--primary-color);
+}
+
+.hero {
+  background-color: var(--secondary-color);
+  border-bottom: 3px solid var(--tertiary-color);
+  width: 100%;
+  height: 25vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+  margin-bottom: 35px;
+}
+
+.search-bar {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+}
+
+.search-bar input {
+  width: 300px;
+  height: 40px;
+  border-radius: 5px;
+  background-color: var(--primary-color);
+  border: 1px solid var(--tertiary-color);
+  padding-left: 10px;
+}
+
+.search-bar button {
+  width: 100px;
+  height: 40px;
+  border-radius: 5px;
+  border: none;
+  background-color: var(--tertiary-color);
+  color: white;
+  cursor: pointer;
+}
+
+.outfits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 20px;
+}
+
+.outfit-card {
+  background-color: var(--secondary-color);
+  border: 1px solid var(--tertiary-color);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.outfit-card:hover {
+  transform: translateY(-2px);
+  border-color: #333;
+}
+
+.outfit-card h3 {
+  background-color: transparent;
+  margin-bottom: 10px;
+  color: white;
+  font-size: 18px;
+}
+
+.outfit-card p {
+  background-color: transparent;
+  color: #ccc;
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+#outfits-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+#outfits-container p {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 16px;
+}
+
+.outfit-thumbnail {
+  width: 150px;
+  height: 150px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  background-color: transparent;
+  object-fit: cover;
+  border: 1px solid var(--tertiary-color);
+}
+
+.outfit-placeholder {
+  width: 150px;
+  height: 150px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  background-color: var(--tertiary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 12px;
+  border: 1px solid var(--tertiary-color);
+}
+
+.outfit-thumbnail,
+.outfit-placeholder {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
