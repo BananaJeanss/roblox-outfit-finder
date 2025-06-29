@@ -42,8 +42,8 @@ async function doFetch(
   url,
   opts = {},
   retries = 3, // retry up to 3 times
-  backoff = 2000, // initial backoff in ms
-  maxBackoff = 16000 // max backoff in ms
+  backoff = 7000, // initial backoff in ms
+  maxBackoff = 25000 // max backoff in ms
 ) {
   const resp = await limitedFetch(url, opts);
   if (resp.status === 429 && retries > 0) {
@@ -55,6 +55,9 @@ async function doFetch(
     // equal jitter
     const maxWait = Math.min(baseWait * 2, maxBackoff);
     const wait = baseWait + Math.random() * (maxWait - baseWait);
+    console.warn(
+      `Rate limited. Retrying in ${Math.round(wait / 1000)} seconds...`
+    );
     await new Promise((r) => setTimeout(r, wait));
     return doFetch(url, opts, retries - 1, backoff * 2, maxBackoff);
   }
