@@ -12,7 +12,8 @@ async function findOutfits() {
     return;
   }
 
-  container.innerHTML = "<div class=\"loading-p\"><p>Loading outfits...</p><div class=\"loader\"></div></div>";
+  container.innerHTML =
+    '<div class="loading-p"><p>Loading outfits...</p><div class="loader"></div></div>';
   userContainer.style.display = "none";
 
   try {
@@ -73,6 +74,7 @@ function displayOutfits(outfits) {
                   )}</p></div>`
             }
             <h3>${outfit.name}</h3>
+            <p>ID: ${outfit.id}</p>
         </div>
     `
     )

@@ -79,11 +79,16 @@ app.get("/api/user/:username", async (req, res) => {
   }
 
   try {
-    // fetch user
     const userResp = await doFetch(
-      `https://users.roblox.com/v1/users/search?keyword=${encodeURIComponent(
-        username
-      )}&limit=10`
+      "https://users.roblox.com/v1/usernames/users",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          usernames: [username],
+          excludeBannedUsers: true,
+        }),
+      }
     );
     const userData = await userResp.json();
     if (!userResp.ok || !userData.data?.length) {
@@ -108,6 +113,14 @@ app.get("/api/user/:username", async (req, res) => {
     const outfitsResp = await doFetch(
       `https://avatar.roblox.com/v1/users/${user.id}/outfits?page=1&itemsPerPage=500`
     );
+    if (!outfitsResp.ok) {
+      console.warn(
+        `Outfits fetch failed for user ${username}: ${outfitsResp.status}`
+      );
+      return res
+        .status(outfitsResp.status)
+        .json({ error: "Failed to fetch outfits" });
+    }
     const outfitsData = await outfitsResp.json();
     // filter out isEditable=false outfits
     // these are usually roblox/catalog outfits

@@ -18,7 +18,8 @@ html {
   scroll-behavior: smooth;
 }
 
-html, body {
+html,
+body {
   min-height: 100vh;
 }
 
@@ -85,8 +86,12 @@ body {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .loading-p {
@@ -95,10 +100,6 @@ body {
   align-items: center;
   justify-content: center;
   gap: 10px;
-}
-
-.loading-p p {
-  margin-top: 0 !important;
 }
 
 #username-container {
@@ -164,7 +165,6 @@ body {
 
 #outfits-container p {
   text-align: center;
-  margin-top: 20px;
   font-size: 16px;
 }
 
