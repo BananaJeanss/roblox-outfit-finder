@@ -15,10 +15,17 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // setup cache
-const cache = new NodeCache({ stdTTL: 120 }); // cache responses for 120s
+const cacheTime = 60 * 5; // cache responses for 5m
+const cache = new NodeCache({ stdTTL: cacheTime });
 
-// setup throttler: max 4 req/sec
-const limiter = new Bottleneck({ minTime: 250, maxConcurrent: 1 });
+// throttler setup
+const limiter = new Bottleneck({
+  reservoir: 1,
+  reservoirRefreshAmount: 1,
+  reservoirRefreshInterval: 4000,
+  minTime: 4000,
+  maxConcurrent: 1,
+});
 const limitedFetch = limiter.wrap(fetch);
 
 // security middleware/helmet
@@ -65,12 +72,22 @@ async function doFetch(
 }
 
 app.get("/api/user/:username", async (req, res) => {
-  const { username } = req.params;
+  let { username } = req.params;
   if (!username || typeof username !== "string" || username.length > 25) {
     return res.status(400).json({ error: "Invalid username provided" });
   }
 
-  console.log(`Fetching outfits for user: ${username}`);
+  // Support id:12345 format to bypass username to id lookup
+  let userId = null;
+  if (username.startsWith("id:")) {
+    userId = username.slice(3);
+  }
+
+  if (userId) {
+    console.log(`Fetching outfits for id: ${userId}`);
+  } else {
+    console.log(`Fetching outfits for username: ${username}`);
+  }
 
   const cacheKey = `user:${username}`;
   const cached = cache.get(cacheKey);
@@ -79,24 +96,44 @@ app.get("/api/user/:username", async (req, res) => {
   }
 
   try {
-    const userResp = await doFetch(
-      "https://users.roblox.com/v1/usernames/users",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          usernames: [username],
-          excludeBannedUsers: true,
-        }),
+    let user;
+    if (userId) {
+      // Fetch user info by ID
+      const userResp = await doFetch(
+        `https://users.roblox.com/v1/users/${userId}`
+      );
+      const userData = await userResp.json();
+      if (!userResp.ok || !userData.id) {
+        return res
+          .status(userResp.ok ? 404 : userResp.status)
+          .json({ error: userData.error || "User not found" });
       }
-    );
-    const userData = await userResp.json();
-    if (!userResp.ok || !userData.data?.length) {
-      return res
-        .status(userResp.ok ? 404 : userResp.status)
-        .json({ error: userData.error || "User not found" });
+      user = {
+        id: userData.id,
+        name: userData.name,
+        displayName: userData.displayName,
+      };
+    } else {
+      // Username lookup as before
+      const userResp = await doFetch(
+        "https://users.roblox.com/v1/usernames/users",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            usernames: [username],
+            excludeBannedUsers: true,
+          }),
+        }
+      );
+      const userData = await userResp.json();
+      if (!userResp.ok || !userData.data?.length) {
+        return res
+          .status(userResp.ok ? 404 : userResp.status)
+          .json({ error: userData.error || "User not found" });
+      }
+      user = userData.data[0];
     }
-    const user = userData.data[0];
 
     // fetch user headshot
     try {

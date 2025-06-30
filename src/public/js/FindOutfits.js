@@ -1,5 +1,5 @@
 async function findOutfits() {
-  const username = document.getElementById("username").value.trim();
+  let username = document.getElementById("username").value.trim();
   const container = document.getElementById("outfits-container");
   const userContainer = document.getElementById("username-container");
   const userTitle = document.getElementById("username-title");
@@ -12,6 +12,13 @@ async function findOutfits() {
     return;
   }
 
+  // check for @ anywhere in username and remove it
+  if (username.includes("@")) {
+    username = username.replace(/@/g, "");
+    document.getElementById("username").value = username;
+  }
+  
+  // username validation
   container.innerHTML =
     '<div class="loading-p"><p>Loading outfits...</p><div class="loader"></div></div>';
   userContainer.style.display = "none";
