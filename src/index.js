@@ -73,6 +73,11 @@ async function doFetch(
 
 app.get("/api/user/:username", async (req, res) => {
   let { username } = req.params;
+
+  // normalize username input
+  username = username.replace(/@/g, "").trim();
+  username = username.toLowerCase();
+
   if (!username || typeof username !== "string" || username.length > 25) {
     return res.status(400).json({ error: "Invalid username provided" });
   }
@@ -148,7 +153,7 @@ app.get("/api/user/:username", async (req, res) => {
 
     // fetch outfits
     const outfitsResp = await doFetch(
-      `https://avatar.roblox.com/v1/users/${user.id}/outfits?page=1&itemsPerPage=500`
+      `https://avatar.roblox.com/v1/users/${user.id}/outfits?page=1&itemsPerPage=100`
     );
     if (!outfitsResp.ok) {
       console.warn(
@@ -187,6 +192,7 @@ app.get("/api/user/:username", async (req, res) => {
       });
     }
 
+    // successfully fetched user and outfits at this point
     const result = { user, outfits };
     cache.set(cacheKey, result);
     res.json(result);
