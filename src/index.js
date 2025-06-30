@@ -94,7 +94,7 @@ app.get("/api/user/:username", async (req, res) => {
     console.log(`Fetching outfits for username: ${username}`);
   }
 
-  const cacheKey = `user:${username}`;
+  const cacheKey = userId ? `user:${userId}` : `user:${username}`;
   const cached = cache.get(cacheKey);
   if (cached) {
     return res.json(cached);
@@ -194,7 +194,9 @@ app.get("/api/user/:username", async (req, res) => {
 
     // successfully fetched user and outfits at this point
     const result = { user, outfits };
-    cache.set(cacheKey, result);
+    // cache under both the numeric ID and the username
+    cache.set(`user:${user.id}`, result);
+    cache.set(`user:${username}`, result);
     res.json(result);
   } catch (err) {
     console.error("API Error:", err);
