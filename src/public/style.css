@@ -69,6 +69,38 @@ body {
   cursor: pointer;
 }
 
+.search-bar button:disabled {
+  background-color: var(--secondary-color);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.loader {
+  border: 6px solid var(--secondary-color);
+  border-top: 6px solid #004a86;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-p {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.loading-p p {
+  margin-top: 0 !important;
+}
+
 #username-container {
   display: flex;
   flex-direction: row;

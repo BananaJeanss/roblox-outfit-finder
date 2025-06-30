@@ -4,6 +4,7 @@ async function findOutfits() {
   const userContainer = document.getElementById("username-container");
   const userTitle = document.getElementById("username-title");
   const userImg = document.getElementById("user-thumbnail");
+  const searchbutton = document.getElementById("search-button");
 
   if (!username) {
     container.innerHTML = "<p>Please enter a username</p>";
@@ -11,10 +12,11 @@ async function findOutfits() {
     return;
   }
 
-  container.innerHTML = "<p>Loading outfits...</p>";
+  container.innerHTML = "<div class=\"loading-p\"><p>Loading outfits...</p><div class=\"loader\"></div></div>";
   userContainer.style.display = "none";
 
   try {
+    searchbutton.disabled = true;
     const response = await fetch(`/api/user/${username}`);
     const data = await response.json();
 
@@ -23,9 +25,11 @@ async function findOutfits() {
       if (response.status === 429) {
         container.innerHTML =
           "<p>Ratelimited, try again after 15 seconds (429)</p>";
+        searchbutton.disabled = false;
       } else {
         // if any other error
         container.innerHTML = `<p>${data.error}</p>`;
+        searchbutton.disabled = false;
       }
       return;
     }
@@ -40,15 +44,18 @@ async function findOutfits() {
     // no outfits found
     if (!data.outfits || data.outfits.length === 0) {
       container.innerHTML = "<p>No outfits found for this user</p>";
+      searchbutton.disabled = false;
       return;
     }
 
     // display outfits
     displayOutfits(data.outfits);
+    searchbutton.disabled = false;
   } catch (error) {
     // handle fetch errors
     console.error("Error fetching outfits:", error);
     container.innerHTML = "<p>Error loading outfits. Please try again.</p>";
+    searchbutton.disabled = false;
   }
 }
 
