@@ -81,6 +81,7 @@ body {
   border-radius: 5px;
   background-color: var(--primary-color);
   border: 1px solid var(--tertiary-color);
+  color: var(--light-primary-color);
   padding-left: 10px;
 }
 
@@ -298,6 +299,7 @@ body.light-theme .footer a:hover {
 body.light-theme .search-bar input {
   background-color: var(--light-primary-color);
   border: 1px solid var(--light-tertiary-color);
+  color: (var(--primary-color));
 }
 
 body.light-theme .search-bar button {
