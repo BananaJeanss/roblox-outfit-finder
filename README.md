@@ -35,6 +35,10 @@ npm run dev
 
 The app will be available at [http://localhost:3000](http://localhost:3000) by default.
 
+## Proxies
+
+If you want to use proxies, set `USE_PROXIES` to `true` in the `.env` file and list your proxies in `proxies.txt`.
+
 ## Contributing
 
 Contributions are welcome! If you have suggestions or improvements, feel free to open an issue or submit a pull request.

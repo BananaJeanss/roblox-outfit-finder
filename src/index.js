@@ -7,12 +7,46 @@ import helmet from "helmet";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 
+import fs from "fs";
+import { HttpsProxyAgent } from "https-proxy-agent";
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+let USE_PROXIES = process.env.USE_PROXIES === "true";
+let proxyList = [];
+
+if (USE_PROXIES) {
+  const data = fs
+    .readFileSync(join(__dirname, "..", "proxies.txt"), "utf-8")
+    .split(/\r?\n/);
+  proxyList = data
+    .map((l) => l.trim())
+    .filter(
+      (l) =>
+        l &&
+        !l.startsWith("//") &&
+        !/^Place your proxies here if USE_PROXIES is set to true in .env/i.test(l) && // skip default text
+        /^([a-zA-Z]+:\/\/)?[0-9a-zA-Z\.\-]+(:\d+)?(\/.*)?$/.test(l) // basic proxy format
+    );
+
+  if (proxyList.length === 0) {
+    console.error(
+      "No valid proxies found in proxies.txt. Disabling proxy usage."
+    );
+    USE_PROXIES = false;
+  }
+}
+
+function getRandomProxyAgent() {
+  if (!proxyList.length) return { agent: null, url: null };
+  const raw = proxyList[Math.floor(Math.random() * proxyList.length)];
+  const url = /^https?:\/\//i.test(raw) ? raw : `http://${raw}`;
+  return { agent: new HttpsProxyAgent(url), url };
+}
 
 // setup cache
 const cacheTime = 60 * 5; // cache responses for 5m
@@ -52,7 +86,37 @@ async function doFetch(
   backoff = 7000, // initial backoff in ms
   maxBackoff = 25000 // max backoff in ms
 ) {
-  const resp = await limitedFetch(url, opts);
+  // attach a proxy if enabled
+  if (USE_PROXIES) {
+    const { agent, url: proxyUrl } = getRandomProxyAgent();
+    if (agent) {
+      opts.agent = agent;
+      opts._proxyUrl = proxyUrl; // stash for removal on failure
+    }
+  }
+
+  let resp;
+  try {
+    resp = await limitedFetch(url, opts);
+  } catch (err) {
+    // remove bad proxy from the pool and retry direct/fresh proxy
+    if (USE_PROXIES && opts._proxyUrl) {
+      console.warn(
+        `Proxy ${opts._proxyUrl} failed (${err.code}), removing from list`
+      );
+      proxyList = proxyList.filter(
+        (p) =>
+          p !== opts._proxyUrl &&
+          p !== opts._proxyUrl.replace(/^https?:\/\//, "")
+      );
+      delete opts.agent;
+      delete opts._proxyUrl;
+      return doFetch(url, opts, retries, backoff, maxBackoff);
+    }
+    throw err;
+  }
+
+  // rate‐limit retry logic
   if (resp.status === 429 && retries > 0) {
     const ra = resp.headers.get("retry-after");
     // respect Retry-After or fall back to jittered backoff
