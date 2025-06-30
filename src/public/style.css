@@ -1,9 +1,20 @@
 @import url("https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&display=swap");
 
 :root {
+  /* dark theme colors */
   --primary-color: #000000;
   --secondary-color: #0a0a0a;
   --tertiary-color: #1a1a1a;
+  --text-color: white;
+  --text-color-alt: #ccc;
+  /* light theme colors */
+  --light-primary-color: #ffffff;
+  --light-secondary-color: #f0f0f0;
+  --light-tertiary-color: #e0e0e0;
+  --light-text-color: #000000;
+  --light-text-color-alt: #333333;
+  /* misc */
+  --loader-color: #004a86;
 }
 
 * {
@@ -11,7 +22,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  color: white;
 }
 
 html {
@@ -21,6 +31,7 @@ html {
 html,
 body {
   min-height: 100vh;
+  color: var(--text-color);
 }
 
 body {
@@ -42,6 +53,19 @@ body {
   justify-content: center;
   align-items: center;
   gap: 25px;
+}
+
+#theme-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  background-color: var(--tertiary-color);
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
 }
 
 .search-bar {
@@ -66,7 +90,7 @@ body {
   border-radius: 5px;
   border: none;
   background-color: var(--tertiary-color);
-  color: white;
+  color: var(--text-color);
   cursor: pointer;
 }
 
@@ -78,7 +102,7 @@ body {
 
 .loader {
   border: 6px solid var(--secondary-color);
-  border-top: 6px solid #004a86;
+  border-top: 6px solid var(--loader-color);
   border-radius: 50%;
   width: 32px;
   height: 32px;
@@ -89,6 +113,7 @@ body {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -114,9 +139,6 @@ body {
   height: 100px;
   border-radius: 50%;
   border: 2px solid var(--tertiary-color);
-}
-
-#username-title {
 }
 
 .outfits-grid {
@@ -147,7 +169,7 @@ body {
 .outfit-card h3 {
   background-color: transparent;
   margin-bottom: 10px;
-  color: white;
+  color: var(--text-color);
   font-size: 18px;
 }
 
@@ -195,8 +217,7 @@ body {
   border: 1px solid var(--tertiary-color);
 }
 
-.outfit-thumbnail,
-.outfit-placeholder {
+.outfit-thumbnail {
   display: block;
   margin-left: auto;
   margin-right: auto;
@@ -219,14 +240,79 @@ body {
 .footer p,
 .footer a {
   margin: 0;
-  color: #ccc;
+  color: var(--text-color-alt);
   text-decoration: none;
   transition: color 0.2s;
 }
 
 .footer a:hover {
-  color: #fff;
+  color: var(--text-color);
   text-decoration: underline;
+}
+
+/* light theme styles */
+body.light-theme {
+  background-color: var(--light-primary-color);
+  color: var(--light-text-color);
+}
+
+body.light-theme .hero {
+  background-color: var(--light-secondary-color);
+  border-bottom: 3px solid var(--light-tertiary-color);
+}
+
+body.light-theme #theme-toggle {
+  background-color: var(--light-tertiary-color);
+  color: var(--light-text-color);
+  border: 2px solid rgba(0, 0, 0, 0.5);
+  color: rgba(0, 0, 0, 0.75);
+}
+
+body.light-theme .outfit-card {
+  background-color: var(--light-secondary-color);
+  border: 1px solid var(--light-tertiary-color);
+}
+
+body.light-theme .outfit-card h3 {
+  color: var(--light-text-color);
+}
+
+body.light-theme .outfit-card p {
+  color: var(--light-text-color-alt);
+}
+
+body.light-theme .footer {
+  background-color: var(--light-secondary-color);
+  border-top: 3px solid var(--light-tertiary-color);
+}
+
+body.light-theme .footer p,
+body.light-theme .footer a {
+  color: var(--light-text-color-alt);
+}
+
+body.light-theme .footer a:hover {
+  color: var(--light-text-color);
+}
+
+body.light-theme .search-bar input {
+  background-color: var(--light-primary-color);
+  border: 1px solid var(--light-tertiary-color);
+}
+
+body.light-theme .search-bar button {
+  background-color: var(--light-tertiary-color);
+  color: var(--light-text-color);
+}
+
+body.light-theme .loader {
+  border: 6px solid var(--light-secondary-color);
+  border-top: 6px solid var(--loader-color);
+}
+
+body.light-theme .outfit-placeholder {
+  background-color: var(--light-tertiary-color);
+  color: #666;
 }
 
 /* responsive styles */
@@ -236,11 +322,13 @@ body {
     gap: 14px;
     padding: 0 8px;
   }
+
   .outfit-thumbnail,
   .outfit-placeholder {
     width: 120px;
     height: 120px;
   }
+
   #username-container img {
     width: 70px;
     height: 70px;
@@ -252,33 +340,47 @@ body {
     flex-direction: column;
   }
 
+  #theme-toggle {
+    top: 10px;
+    right: 10px;
+    width: 35px;
+    height: 35px;
+  }
+
   .search-bar input {
     width: 180px;
     height: 32px;
   }
+
   .search-bar button {
     width: 100%;
     height: 32px;
   }
+
   .outfits-grid {
     gap: 8px;
   }
+
   .outfit-card {
     padding: 10px;
   }
+
   .outfit-thumbnail,
   .outfit-placeholder {
     width: 90px;
     height: 90px;
   }
+
   #username-title {
     max-width: 75%;
     text-align: center;
   }
+
   #username-container {
     gap: 10px;
     flex-direction: column;
   }
+
   #username-container img {
     width: 25%;
     height: 25%;
