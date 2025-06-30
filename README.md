@@ -8,6 +8,7 @@ A simple web app to find and display a Roblox user's saved outfits by their user
 ![Issues](https://img.shields.io/github/issues/BananaJeanss/roblox-outfit-finder?style=flat-square&color=red)
 ![Last Commit](https://img.shields.io/github/last-commit/BananaJeanss/roblox-outfit-finder?style=flat-square&color=lightblue)
 ![Stars](https://img.shields.io/github/stars/BananaJeanss/roblox-outfit-finder?style=flat-square&color=orange)
+[![Deploy to Nest](https://github.com/BananaJeanss/roblox-outfit-finder/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/BananaJeanss/roblox-outfit-finder/actions/workflows/main.yml)
 
 </div>
 
