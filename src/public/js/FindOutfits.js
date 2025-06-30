@@ -5,6 +5,7 @@ async function findOutfits() {
   const userTitle = document.getElementById("username-title");
   const userImg = document.getElementById("user-thumbnail");
   const searchbutton = document.getElementById("search-button");
+  const userId = document.getElementById("user-id");
 
   if (!username) {
     container.innerHTML = "<p>Please enter a username</p>";
@@ -17,7 +18,7 @@ async function findOutfits() {
     username = username.replace(/@/g, "");
     document.getElementById("username").value = username;
   }
-  
+
   // username validation
   container.innerHTML =
     '<div class="loading-p"><p>Loading outfits...</p><div class="loader"></div></div>';
@@ -44,6 +45,7 @@ async function findOutfits() {
 
     // update and show user info
     userTitle.textContent = `@${data.user.name} (${data.user.displayName})`;
+    userId.textContent = `ID: ${data.user.id}`;
 
     // use headshotUrl from API (falls back to default if null)
     userImg.src = data.user.headshotUrl || "android-chrome-512x512.png";

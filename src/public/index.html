@@ -28,7 +28,7 @@
     />
     <meta
       property="og:image"
-      content="https://outfitfinder.bnajns.hackclub.app/android-chrome-512x512.png"
+      content="https://outfitfinder.bnajns.hackclub.app/screenshot.png"
     />
 
     <!-- Twitter Card -->
@@ -40,7 +40,7 @@
     />
     <meta
       name="twitter:image"
-      content="https://outfitfinder.bnajns.hackclub.app/android-chrome-512x512.png"
+      content="https://outfitfinder.bnajns.hackclub.app/screenshot.png"
     />
 
     <link rel="stylesheet" href="style.css" />
@@ -66,7 +66,10 @@
       <button onclick="findOutfits()" id="search-button">Find outfits</button>
     </div>
     <div id="username-container" style="display: none">
-      <h2 id="username-title">@username (displayname)</h2>
+      <div class="username-info">
+        <h2 id="username-title">@username (displayname)</h2>
+        <p id="user-id">ID: 1234567890</p>
+      </div>
       <img
         id="user-thumbnail"
         src="android-chrome-512x512.png"
