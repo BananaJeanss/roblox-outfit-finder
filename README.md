@@ -12,14 +12,29 @@ A simple web app to find and display a Roblox user's saved outfits by their user
 
 </div>
 
+## Features
+
+- Find any roblox user's saved outfits by username or user ID
+- Caches results for each user for up to 5 minutes by default
+- Rate limit handling & throttling to avoid hitting roblox API limits
+- Light/dark theme toggle
+
 ## Usage
 
-1. Go to the website: [https://outfitfinder.bnajns.hackclub.app](https://outfitfinder.bnajns.hackclub.app)
-2. Input the username (@username, not display name).
-3. Click "Find outfits" to view the user's outfits
+1. Go to [https://outfitfinder.bnajns.hackclub.app](https://outfitfinder.bnajns.hackclub.app)
+2. Enter the username (`@username`, not display name) or `id:1234567890`
+3. Click **Find outfits** to view the user's saved outfits
 
-> [!WARNING]
-> Roblox API rate limits may be somewhat strict, if you get ratelimited, wait about 15 seconds and then try again.
+## Rate Limits
+
+> [!IMPORTANT]  
+> The roblox API has a strict ratelimit. If you see a "ratelimited" message, wait about 17 seconds and try again.
+> If you repeatedly get rate-limited, consider enabling proxies (see below).
+
+## Caching
+
+- User and outfit data is cached in memory for 5 minutes to reduce API calls and speed up repeat lookups.
+- If you search for the same user again within 5 minutes, results will be served instantly from cache.
 
 ## Local Setup
 
@@ -37,7 +52,9 @@ The app will be available at [http://localhost:3000](http://localhost:3000) by d
 
 ## Proxies
 
-If you want to use proxies, set `USE_PROXIES` to `true` in the `.env` file and list your proxies in `proxies.txt`.
+If you want to use proxies, set `USE_PROXIES=true` in your `.env` file and list your proxies (one per line) in [`proxies.txt`](proxies.txt).
+
+Supported formats: `ip:port` or `http://ip:port`.
 
 ## Contributing
 
