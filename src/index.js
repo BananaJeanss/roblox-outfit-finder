@@ -117,10 +117,11 @@ app.get("/api/user/:username", async (req, res) => {
         id: userData.id,
         name: userData.name,
         displayName: userData.displayName,
+        created: userData.created,
       };
     } else {
-      // Username lookup as before
-      const userResp = await doFetch(
+      // Username lookup
+      const lookupResp = await doFetch(
         "https://users.roblox.com/v1/usernames/users",
         {
           method: "POST",
@@ -131,13 +132,25 @@ app.get("/api/user/:username", async (req, res) => {
           }),
         }
       );
-      const userData = await userResp.json();
-      if (!userResp.ok || !userData.data?.length) {
+      const lookupData = (await lookupResp.json()).data?.[0];
+      if (!lookupResp.ok || !lookupData) {
         return res
-          .status(userResp.ok ? 404 : userResp.status)
-          .json({ error: userData.error || "User not found" });
+          .status(lookupResp.ok ? 404 : lookupResp.status)
+          .json({ error: "User not found" });
       }
-      user = userData.data[0];
+
+      // fetch user details
+      const detailResp = await doFetch(
+        `https://users.roblox.com/v1/users/${lookupData.id}`
+      );
+      const detailData = await detailResp.json();
+
+      user = {
+        id: detailData.id,
+        name: detailData.name,
+        displayName: detailData.displayName,
+        created: detailData.created,
+      };
     }
 
     // fetch user headshot
@@ -194,9 +207,11 @@ app.get("/api/user/:username", async (req, res) => {
 
     // successfully fetched user and outfits at this point
     const result = { user, outfits };
-    // cache under both the numeric ID and the username
+    // cache under numeric ID
     cache.set(`user:${user.id}`, result);
-    cache.set(`user:${username}`, result);
+    // cache under username
+    cache.set(`user:${user.name.toLowerCase()}`, result);
+
     res.json(result);
   } catch (err) {
     console.error("API Error:", err);

@@ -62,12 +62,14 @@
         type="text"
         id="username"
         placeholder="@username OR id:1234567890"
+        onkeydown="if(event.key==='Enter') findOutfits()"
       />
       <button onclick="findOutfits()" id="search-button">Find outfits</button>
     </div>
     <div id="username-container" style="display: none">
       <div class="username-info">
         <h2 id="username-title">@username (displayname)</h2>
+        <p id="account-age">Account Age: 10 years, 10 months, 10 days</p>
         <p id="user-id">ID: 1234567890</p>
       </div>
       <img

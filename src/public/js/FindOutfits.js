@@ -1,3 +1,22 @@
+function formatAge(date) {
+  const now = new Date();
+  let years = now.getFullYear() - date.getFullYear();
+  let months = now.getMonth() - date.getMonth();
+  let days = now.getDate() - date.getDate();
+
+  if (days < 0) {
+    months--;
+    const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+    days += prevMonth.getDate();
+  }
+  if (months < 0) {
+    years--;
+    months += 12;
+  }
+  return `${years} years, ${months} months, ${days} days`;
+}
+
+
 async function findOutfits() {
   let username = document.getElementById("username").value.trim();
   const container = document.getElementById("outfits-container");
@@ -5,6 +24,7 @@ async function findOutfits() {
   const userTitle = document.getElementById("username-title");
   const userImg = document.getElementById("user-thumbnail");
   const searchbutton = document.getElementById("search-button");
+  const usernameInput = document.getElementById("username");
   const userId = document.getElementById("user-id");
 
   if (!username) {
@@ -26,6 +46,7 @@ async function findOutfits() {
 
   try {
     searchbutton.disabled = true;
+    usernameInput.disabled = true;
     const response = await fetch(`/api/user/${username}`);
     const data = await response.json();
 
@@ -35,10 +56,12 @@ async function findOutfits() {
         container.innerHTML =
           "<p>Ratelimited, try again after 15 seconds (429)</p>";
         searchbutton.disabled = false;
+        usernameInput.disabled = false;
       } else {
         // if any other error
         container.innerHTML = `<p>${data.error}</p>`;
         searchbutton.disabled = false;
+        usernameInput.disabled = false;
       }
       return;
     }
@@ -51,21 +74,30 @@ async function findOutfits() {
     userImg.src = data.user.headshotUrl || "android-chrome-512x512.png";
     userContainer.style.display = "flex";
 
+    const accountAgeEl = document.getElementById("account-age");
+    if (data.user.created) {
+      const createdDate = new Date(data.user.created);
+      accountAgeEl.textContent = `Account Age: ${formatAge(createdDate)}`;
+    }
+
     // no outfits found
     if (!data.outfits || data.outfits.length === 0) {
       container.innerHTML = "<p>No outfits found for this user</p>";
       searchbutton.disabled = false;
+      usernameInput.disabled = false;
       return;
     }
 
     // display outfits
     displayOutfits(data.outfits);
     searchbutton.disabled = false;
+    usernameInput.disabled = false;
   } catch (error) {
     // handle fetch errors
     console.error("Error fetching outfits:", error);
     container.innerHTML = "<p>Error loading outfits. Please try again.</p>";
     searchbutton.disabled = false;
+    usernameInput.disabled = false;
   }
 }
 
